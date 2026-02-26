@@ -197,8 +197,7 @@ def build_pipeline():
 
     # 5. LLM
     llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash-preview-04-17",
-        temperature=0,
+        model="gemini-2.5-flash",
         google_api_key=st.secrets["GOOGLE_API_KEY"],
         max_output_tokens=1024,
     )
