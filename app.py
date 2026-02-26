@@ -165,13 +165,15 @@ def build_pipeline():
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
-    from langchain_anthropic import ChatAnthropic
+    from langchain_google_genai import ChatGoogleGenerativeAI
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.runnables import RunnablePassthrough
 
     # 1. LOAD
     doc_path = Path(__file__).parent / "itec3310_syllabus.txt"
+    if not doc_path.exists():
+        raise FileNotFoundError(f"Syllabus not found at: {doc_path}. Files in parent: {list(Path(__file__).parent.iterdir())}")
     loader = TextLoader(str(doc_path))
     documents = loader.load()
 
@@ -194,11 +196,11 @@ def build_pipeline():
     retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
     # 5. LLM
-    llm = ChatAnthropic(
-        model="claude-haiku-4-5-20251001",
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
         temperature=0,
-        anthropic_api_key=st.secrets["ANTHROPIC_API_KEY"],
-        max_tokens=1024,
+        google_api_key=st.secrets["GOOGLE_API_KEY"],
+        max_output_tokens=1024,
     )
 
     # 6. PROMPT (LCEL-style ChatPromptTemplate)
@@ -262,7 +264,7 @@ try:
     """, unsafe_allow_html=True)
 except Exception as e:
     st.error(f"⚠️ Could not build pipeline: {e}")
-    st.info("Make sure `ANTHROPIC_API_KEY` is set in your Streamlit secrets.")
+    st.info("Make sure `GOOGLE_API_KEY` is set in your Streamlit secrets.")
     st.stop()
 
 # ── Suggestion chips ───────────────────────────────────────────────────────────
