@@ -1,0 +1,59 @@
+COURSE SYLLABUS
+DATA MANAGEMENT AND ANALYTICS — ITEC 3310
+Fall 2026 | Section 02 | Credits: 3
+
+Instructor: Dr. Patricia Nguyen
+Email: p.nguyen@college.edu
+Office Hours: Tuesdays 2:00–4:00 PM, Room B-214 (also available by appointment)
+
+COURSE DESCRIPTION
+This course introduces students to data management principles, relational databases, and applied analytics using real-world datasets. Topics include SQL, data cleaning, visualization, and an introduction to machine learning concepts. Students will complete hands-on labs using Python and PostgreSQL throughout the semester.
+
+LEARNING OUTCOMES
+By the end of the course, students will be able to:
+1. Design and query relational databases using SQL.
+2. Clean, transform, and prepare datasets for analysis using Python (pandas).
+3. Create data visualizations using Matplotlib and Seaborn.
+4. Apply basic descriptive and inferential statistics to data problems.
+5. Critically evaluate data sources for bias, completeness, and reliability.
+
+REQUIRED MATERIALS
+- Textbook: "Data Science for Business" by Provost & Fawcett (O'Reilly, 2nd ed.)
+- Software: Python 3.11+, PostgreSQL 15, Jupyter Notebook (all free; install guide on LMS)
+- All lecture slides and datasets are posted on the LMS within 24 hours of class.
+
+SCHEDULE — 15-WEEK OUTLINE
+Weeks 1–2:    Course intro, data literacy fundamentals, types of data
+Weeks 3–5:    Relational databases, ER diagrams, SQL (SELECT, JOIN, GROUP BY)
+Weeks 6–7:    Data cleaning with Python — pandas, handling nulls, outlier detection
+Weeks 8–9:    Data visualization — Matplotlib, Seaborn, choosing the right chart type
+Week 10:      Midterm exam + review
+Weeks 11–12:  Descriptive statistics, distributions, correlation
+Weeks 13–14:  Intro to machine learning — linear regression, decision trees (conceptual)
+Week 15:      Final project presentations + course debrief
+
+GRADED COMPONENTS
+Lab Assignments (8 total):        30%   — Due Fridays by 11:59 PM
+Quizzes (5 total, best 4 count):  15%   — Held in-class, Tuesdays
+Midterm Exam:                     20%   — Week 10, in-class, open-note (1 page allowed)
+Final Project:                    30%   — Due last day of Week 15; group of 2–3 students
+Participation:                     5%   — Attendance + in-class contributions
+
+GRADING SCALE
+A: 90–100  |  B: 80–89  |  C: 70–79  |  D: 60–69  |  F: below 60
+
+LATE WORK POLICY
+Lab assignments submitted within 24 hours of the deadline receive a 10% deduction.
+Assignments submitted 24–72 hours late receive a 25% deduction.
+No assignments will be accepted more than 72 hours after the deadline without a documented medical or family emergency approved in advance by the instructor.
+Quizzes cannot be made up except in cases of documented medical emergencies notified before the quiz date.
+The final project deadline is firm. No extensions will be granted.
+
+ACADEMIC INTEGRITY
+All submitted work must be your own. Use of AI-generated code or text without attribution is considered academic dishonesty and will be handled under the College Academic Integrity Policy (Policy 4.2.1). Students may use AI tools as a learning aid but must document their use in a brief note at the top of any submission where AI assisted.
+
+ACCESSIBILITY
+Students requiring accommodations must submit their Accessibility Services documentation to the instructor within the first two weeks of class. Retroactive accommodations will not be applied to assessments already completed.
+
+COMMUNICATION POLICY
+The instructor aims to respond to all emails within 48 business hours. For urgent matters, students should visit office hours. Group questions are best directed to the class discussion board on the LMS, where other students may also benefit from the answer.
