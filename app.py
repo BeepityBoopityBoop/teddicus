@@ -171,7 +171,7 @@ def build_pipeline():
     from langchain_core.runnables import RunnablePassthrough
 
     # 1. LOAD
-    doc_path = Path(__file__).parent / "docs" / "itec3310_syllabus.txt"
+    doc_path = Path(__file__).parent / "itec3310_syllabus.txt"
     loader = TextLoader(str(doc_path))
     documents = loader.load()
 
