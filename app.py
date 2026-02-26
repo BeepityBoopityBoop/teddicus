@@ -160,13 +160,15 @@ def build_pipeline():
     We use sentence-transformers (no API key needed for embeddings) and
     Anthropic Claude for generation.
     """
+    # All imports use dedicated sub-packages (langchain 0.2+ / LCEL pattern)
     from langchain_community.document_loaders import TextLoader
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
-    from langchain.chains import RetrievalQA
     from langchain_anthropic import ChatAnthropic
-    from langchain_core.prompts import PromptTemplate
+    from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.output_parsers import StrOutputParser
+    from langchain_core.runnables import RunnablePassthrough
 
     # 1. LOAD
     doc_path = Path(__file__).parent / "docs" / "itec3310_syllabus.txt"
@@ -181,7 +183,7 @@ def build_pipeline():
     )
     chunks = splitter.split_documents(documents)
 
-    # 3. EMBED (local, no API key needed)
+    # 3. EMBED (local, CPU, no API key needed)
     embeddings = HuggingFaceEmbeddings(
         model_name="all-MiniLM-L6-v2",
         model_kwargs={"device": "cpu"},
@@ -189,8 +191,9 @@ def build_pipeline():
 
     # 4. INDEX
     vectorstore = Chroma.from_documents(chunks, embeddings)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
-    # 5. LLM + CHAIN
+    # 5. LLM
     llm = ChatAnthropic(
         model="claude-haiku-4-5-20251001",
         temperature=0,
@@ -198,9 +201,8 @@ def build_pipeline():
         max_tokens=1024,
     )
 
-    prompt_template = PromptTemplate(
-        input_variables=["context", "question"],
-        template="""You are a helpful course assistant for ITEC 3310 — Data Management and Analytics.
+    # 6. PROMPT (LCEL-style ChatPromptTemplate)
+    prompt = ChatPromptTemplate.from_template("""You are a helpful course assistant for ITEC 3310 — Data Management and Analytics.
 Answer the student's question using ONLY the course syllabus content provided below.
 Be concise, friendly, and precise. If the answer is not in the syllabus, say clearly:
 "I can't find that in the syllabus — please check with Dr. Nguyen directly."
@@ -211,24 +213,26 @@ Syllabus content:
 
 Student question: {question}
 
-Answer:"""
+Answer:""")
+
+    # 7. LCEL CHAIN  (replaces deprecated RetrievalQA)
+    def format_docs(docs):
+        return "\n\n".join(d.page_content for d in docs)
+
+    chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
     )
 
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=vectorstore.as_retriever(search_kwargs={"k": 4}),
-        chain_type_kwargs={"prompt": prompt_template},
-        return_source_documents=True,
-    )
-
-    return qa_chain
+    return chain, retriever
 
 
-def ask(chain, question: str) -> tuple[str, list]:
-    result = chain.invoke({"query": question})
-    answer = result["result"].strip()
-    sources = result.get("source_documents", [])
+def ask(chain_and_retriever, question: str) -> tuple[str, list]:
+    chain, retriever = chain_and_retriever
+    answer = chain.invoke(question).strip()
+    sources = retriever.invoke(question)
     return answer, sources
 
 
@@ -249,7 +253,7 @@ st.markdown("""
 
 # ── Build pipeline ─────────────────────────────────────────────────────────────
 try:
-    qa_chain = build_pipeline()
+    qa_chain = build_pipeline()  # returns (chain, retriever) tuple
     st.markdown("""
     <div class="status-bar">
         <span class="status-dot"></span>
